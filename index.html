@@ -1,0 +1,526 @@
+<!-- FULL HTML CODE – ViewMint with 11 websites -->
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Earn by Visiting Websites</title>
+<style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+    }
+    header {
+      background-color: #1e293b;
+      color: #ffffff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .container {
+      padding: 2rem;
+    }
+    .btn {
+      background-color: #22c55e;
+      color: #ffffff;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #16a34a;
+    }
+    input[type=text], input[type=password], input[type=number], select {
+      padding: 0.6rem;
+      width: 80%;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    .site-box {
+      margin: 1rem 0;
+      padding: 1.2rem;
+      background-color: #1e293b;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(15, 23, 42, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    #loginPage {
+      text-align: center;
+      background: #1e293b;
+      padding: 2rem;
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .withdraw-form {
+      background: #0f172a;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 16px;
+      border: 1px solid #334155;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+    a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      color: #22c55e;
+      text-decoration: underline;
+    }
+    .spinner {
+      border: 4px solid #1e293b;
+      border-top: 4px solid #22c55e;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #1e293b;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .dropdown-content div {
+      color: #e2e8f0;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+    }
+    .dropdown-content div:hover {
+      background-color: #334155;
+    }
+    .show { display: block; }
+  </style>
+</head>
+<body>
+<div class="overlay" id="loginOverlay">
+<div id="loginPage">
+<h2>Login to Continue</h2>
+<form method="POST" onsubmit="return validateRecaptcha()">
+<input id="username" placeholder="Username" type="text"/><br/>
+<input id="password" placeholder="Password" type="password"/><br/>
+<div class="g-recaptcha" data-sitekey="6Lc6H3QrAAAAAARmmWe1cNVJtOtKT7_DMAd9CTvF"></div><br/>
+<button class="btn" onclick="login()">Login</button>
+<p id="loginStatus"></p>
+</form>
+</div>
+</div>
+<div style="text-align: center; padding: 1rem 0 0.5rem 0; font-size: 2rem; font-weight: bold;">
+<span style="color: #22c55e;">View</span><span style="color: white;">Mint</span>
+</div>
+<div id="mainContent" style="display:none">
+<header>
+<div>Balance: ₹<span id="balance">0</span></div>
+<div class="dropdown">
+<div class="menu" onclick="toggleDropdown()">⋮</div>
+<div class="dropdown-content" id="dropdownMenu">
+<div onclick="toggleWithdraw()">💸 Withdraw</div>
+<div onclick="toggleHistory()">📜 Payment History</div>
+</div>
+</div>
+</header>
+<div class="container">
+<h1>🌐Get paid ₹10 for every website you visit and verify with a code.</h1>
+<div id="linksContainer"></div>
+<p id="comingSoon" style="margin-top: 2rem; text-align: center; font-size: 1.1rem; color: #94a3b8;">
+  🚀 New websites will be shown every 10 hours!
+    </p>
+</div>
+<div class="overlay hidden" id="withdrawPage">
+<div class="withdraw-form">
+<div class="close-btn" onclick="toggleWithdraw()">✖</div>
+<h3>Withdraw</h3>
+<div class="form-group">
+<label for="method">Choose Method:</label>
+<select id="method" onchange="updatePaymentFields()">
+<option value="upi">UPI</option>
+<option value="bank">Bank Transfer</option>
+<option value="gplay">Google Play Redeem Code</option>
+</select>
+</div>
+<div class="form-group" id="upiField">
+<input id="upi" placeholder="Enter your UPI ID" type="text"/>
+</div>
+<div class="form-group hidden" id="bankFields">
+<input id="accountNo" placeholder="Bank Account Number" type="text"/><br/>
+<input id="ifsc" placeholder="IFSC Code" type="text"/>
+</div>
+<div class="form-group hidden" id="gplayField">
+<input id="email" placeholder="Enter your Email ID" type="text"/>
+</div>
+<div class="form-group">
+<input id="amount" placeholder="Enter amount to withdraw" type="number"/>
+</div>
+<button class="btn" onclick="withdraw()">Submit</button>
+<p id="withdrawStatus"></p>
+</div>
+</div>
+</div>
+<!-- Popups -->
+<div class="overlay hidden" id="popupMessage">
+<div class="withdraw-form" style="text-align: center;">
+<div class="close-btn" onclick="closePopup()">✖</div>
+<h3 style="color: #22c55e;">💸 Earning received – ₹10 has been added to your wallet.</h3>
+</div>
+</div>
+<div class="overlay hidden" id="withdrawPopup">
+<div class="withdraw-form" style="text-align: center;">
+<div class="close-btn" onclick="closeWithdrawPopup()">✖</div>
+<h3 style="color: #22c55e;">✅Success! Your request has been processed. Check your wallet or email within 24 hours.</h3>
+</div>
+</div>
+<div class="overlay hidden" id="historyPage">
+<div class="withdraw-form" style="max-height: 80vh; overflow-y: auto;">
+<div class="close-btn" onclick="toggleHistory()">✖</div>
+<h3>Your Payment History</h3>
+<div id="historyList" style="margin-top: 1rem;"></div>
+</div>
+</div>
+<footer style="text-align:center; padding: 1.5rem 0; font-size: 0.9rem; color: #94a3b8; background-color: #0f172a; border-top: 1px solid #334155;">
+<div style="margin-bottom: 0.5rem;">
+<a href="#" style="color: #94a3b8; text-decoration: none; margin: 0 10px;">Terms &amp; Conditions</a> |
+    <a href="#" style="color: #94a3b8; text-decoration: none; margin: 0 10px;">Privacy Policy</a> |
+    <a href="#" style="color: #94a3b8; text-decoration: none; margin: 0 10px;">Contact Us</a>
+</div>
+<div style="margin-bottom: 0.3rem;">
+    For support: <a href="mailto:support@viewmint.in" style="color: #22c55e;">support@viewmint.in</a>
+</div>
+<div style="margin-bottom: 0.2rem;">
+    ViewMint Technologies Pvt. Ltd. | CIN: U74999TN2025PTC876543
+  </div>
+<div>
+    © 2025 ViewMint. All rights reserved.
+  </div>
+</footer>
+<script>
+  function login() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+  const status = document.getElementById("loginStatus");
+  if (user.length < 4 || pass.length < 5) {
+    status.textContent = "❌ Username or password too short.";
+    return;
+  }
+  localStorage.setItem("loggedIn", "true");
+  document.getElementById("loginOverlay").style.display = "none";
+  document.getElementById("mainContent").style.display = "block";
+  initializeApp();
+}
+
+function initializeApp() {
+  let balance = parseInt(localStorage.getItem("balance")) || 0;
+  const enteredSites = JSON.parse(localStorage.getItem("enteredSites")) || [];
+  document.getElementById("balance").textContent = balance;
+
+  const links = [
+    { name: 'Website 1', url: 'https://indianshortner.in/dGXi', code: 'KDJHFSJVDDGJJVCDHJH' },
+    { name: 'Website 2', url: 'https://indianshortner.in/aZ5gmMv', code: 'KHSJEJHDHSJEJGHH' },
+    { name: 'Website 3', url: 'https://indianshortner.in/XVq4E', code: 'DUKHVGJJCFFGJHHCCC' },
+    { name: 'Website 4', url: 'https://indianshortner.in/CbUjp', code: 'TUJFDGJKNVDDHJJCC' },
+    { name: 'Website 5', url: 'https://indianshortner.in/bmaQ', code: 'KJCXDHJBCDDHJJGDSF' },
+    { name: 'Website 6', url: 'https://indianshortner.in/fueHn', code: 'USYINCDLNFFIKNVCH' },
+    { name: 'Website 7', url: 'https://indianshortner.in/dgCn', code: 'SDGUKNVCXHJMNBV' },
+    { name: 'Website 8', url: 'https://indianshortner.in/F9u8Uu6', code: 'FGUJJVCHJKKJDDRUUFFG' },
+    { name: 'Website 9', url: 'https://indianshortner.in/ojwCY', code: 'SHJNBCFGHJKBCCCJKNBC' },
+    { name: 'Website 10', url: 'https://indianshortner.in/nmpQPiWV', code: 'SFUNFGJJJCFDTYJNCCCF' },
+    { name: 'Website 11', url: 'https://indianshortner.in/MzqyWDzY', code: 'FGHJJJBVCDSDTHJBV' }
+  ];
+
+  const container = document.getElementById("linksContainer");
+  container.innerHTML = '';
+  links.forEach((link, index) => {
+    const siteKey = `site${index}`;
+    const box = document.createElement("div");
+    box.className = "site-box";
+    box.innerHTML = `
+      <a href="${link.url}" target="_blank">${link.name} 🔗</a><br>
+      <input type="text" id="input${index}" placeholder="Enter code here">
+      <button class="btn" onclick="checkCode(${index})">Enter</button>
+      <p id="status${index}"></p>
+    `;
+    container.appendChild(box);
+  });
+}
+
+function checkCode(index) {
+  const input = document.getElementById("input" + index);
+  const status = document.getElementById("status" + index);
+  const siteKey = `site${index}`;
+  let balance = parseInt(localStorage.getItem("balance")) || 0;
+  const enteredSites = JSON.parse(localStorage.getItem("enteredSites")) || [];
+
+  const codes = [
+    'KDJHFSJVDDGJJVCDHJH',
+    'KHSJEJHDHSJEJGHH',
+    'DUKHVGJJCFFGJHHCCC',
+    'TUJFDGJKNVDDHJJCC',
+    'KJCXDHJBCDDHJJGDSF',
+    'USYINCDLNFFIKNVCH',
+    'SDGUKNVCXHJMNBV',
+    'FGUJJVCHJKKJDDRUUFFG',
+    'SHJNBCFGHJKBCCCJKNBC',
+    'SFUNFGJJJCFDTYJNCCCF',
+    'FGHJJJBVCDSDTHJBV'
+  ];
+
+  if (enteredSites.includes(siteKey)) {
+    status.textContent = "✔️ Code already entered.";
+    return;
+  }
+
+  if (input.value === codes[index]) {
+    balance += 10;
+    enteredSites.push(siteKey);
+    localStorage.setItem("balance", balance);
+    localStorage.setItem("enteredSites", JSON.stringify(enteredSites));
+    document.getElementById("balance").textContent = balance;
+    input.style.display = "none";
+input.nextElementSibling.style.display = "none";
+
+showSpinnerThen(() => {
+  status.textContent = "✅ ₹10 added to your balance!";
+  showPopup();
+});
+  } else {
+    status.textContent = "❌ Wrong code.";
+  }
+}
+
+function toggleWithdraw() {
+  document.getElementById("withdrawPage").classList.toggle("hidden");
+}
+
+function updatePaymentFields() {
+  const method = document.getElementById("method").value;
+  document.getElementById("upiField").classList.add("hidden");
+  document.getElementById("bankFields").classList.add("hidden");
+  document.getElementById("gplayField").classList.add("hidden");
+
+  document.getElementById("upi").disabled = true;
+  document.getElementById("accountNo").disabled = true;
+  document.getElementById("ifsc").disabled = true;
+  document.getElementById("email").disabled = true;
+
+  if (method === "upi") {
+    document.getElementById("upiField").classList.remove("hidden");
+    document.getElementById("upi").disabled = false;
+  } else if (method === "bank") {
+    document.getElementById("bankFields").classList.remove("hidden");
+    document.getElementById("accountNo").disabled = false;
+    document.getElementById("ifsc").disabled = false;
+  } else if (method === "gplay") {
+    document.getElementById("gplayField").classList.remove("hidden");
+    document.getElementById("email").disabled = false;
+  }
+}
+
+function withdraw() {
+  const method = document.getElementById("method").value;
+  const amount = parseInt(document.getElementById("amount").value);
+  const upi = document.getElementById("upi").value.trim();
+  const accountNo = document.getElementById("accountNo").value.trim();
+  const ifsc = document.getElementById("ifsc").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const status = document.getElementById("withdrawStatus");
+  let balance = parseInt(localStorage.getItem("balance")) || 0;
+
+  if (amount < 50) {
+    status.textContent = "❌ Minimum withdrawal amount is ₹50";
+    return;
+  }
+  if (amount > balance) {
+    status.textContent = "❌ Insufficient balance";
+    return;
+  }
+
+  if (method === "upi") {
+    const upiPattern = /^[\w.-]+@[\w.-]+$/;
+    if (!upiPattern.test(upi)) {
+      status.textContent = "❌ Invalid UPI ID";
+      return;
+    }
+  } else if (method === "bank") {
+    if (!/^[0-9]{9,18}$/.test(accountNo)) {
+      status.textContent = "❌ Invalid Account Number";
+      return;
+    }
+    if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
+      status.textContent = "❌ Invalid IFSC Code";
+      return;
+    }
+  } else if (method === "gplay") {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      status.textContent = "❌ Invalid Email Address";
+      return;
+    }
+  }
+
+  balance -= amount;
+  localStorage.setItem("balance", balance);
+  document.getElementById("balance").textContent = balance;
+  status.textContent = "";
+  toggleWithdraw();
+
+  showSpinnerThen(() => {
+    document.getElementById("withdrawPopup").classList.remove("hidden");
+  });
+    }
+  }
+function toggleDropdown() {
+  document.getElementById("dropdownMenu").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.menu')) {
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    for (let i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+function toggleHistory() {
+  const hist = document.getElementById("historyPage");
+  if (hist.classList.contains("hidden")) {
+    showHistory();
+  }
+  hist.classList.toggle("hidden");
+}
+
+function saveHistory(amount, method) {
+  const history = JSON.parse(localStorage.getItem("paymentHistory")) || [];
+  const now = new Date();
+  const record = {
+    date: now.toLocaleString(),
+    amount: amount,
+    method: method,
+    status: "✅ Success"
+  };
+  history.unshift(record);
+  localStorage.setItem("paymentHistory", JSON.stringify(history));
+}
+
+function showHistory() {
+  const container = document.getElementById("historyList");
+  const history = JSON.parse(localStorage.getItem("paymentHistory")) || [];
+  if (history.length === 0) {
+    container.innerHTML = "<p>No history yet.</p>";
+    return;
+  }
+  let html = '<table style="width:100%; border-collapse:collapse;">';
+  html += '<tr><th style="text-align:left; padding:8px;">Date</th><th style="text-align:left; padding:8px;">Amount</th><th style="text-align:left; padding:8px;">Method</th><th style="text-align:left; padding:8px;">Status</th></tr>';
+  history.forEach(entry => {
+    html += `<tr>
+      <td style="padding:8px;">${entry.date}</td>
+      <td style="padding:8px;">₹${entry.amount}</td>
+      <td style="padding:8px;">${entry.method}</td>
+      <td style="padding:8px;">${entry.status}</td>
+    </tr>`;
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+// Inside withdraw(), after updating balance:
+// saveHistory(amount, method);
+</script>
+<!-- Spinner Box -->
+<div class="overlay hidden" id="spinnerBox">
+<div class="withdraw-form" style="text-align: center;">
+<div class="spinner"></div>
+<p style="color: #94a3b8;">Processing...</p>
+</div>
+</div>
+<script async="" defer="" src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+window.onload = function() {
+
+  function validateRecaptcha() {
+    var response = grecaptcha.getResponse();
+    if (response.length === 0) {
+      alert("Please confirm you're not a robot.");
+      return false;
+    }
+    return true;
+  }
+
+
+// ✅ Auto login if already logged in
+if (localStorage.getItem("loggedIn") === "true") {
+  document.getElementById("loginOverlay").style.display = "none";
+  document.getElementById("mainContent").style.display = "block";
+  initializeApp();
+}
+
+// ✅ Spinner function
+function showSpinnerThen(callback) {
+  const spinner = document.getElementById("spinnerBox");
+  spinner.classList.remove("hidden");
+  setTimeout(() => {
+    spinner.classList.add("hidden");
+    callback();
+  }, 1500);
+}
+};
+</script>
+</body>
+</html>
