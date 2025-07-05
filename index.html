@@ -459,7 +459,7 @@ function withdraw() {
   document.getElementById("balance").textContent = balance;
   status.textContent = "";
   toggleWithdraw();
-
+saveHistory(amount, method);
   showSpinnerThen(() => {
     document.getElementById("withdrawPopup").classList.remove("hidden");
   });
