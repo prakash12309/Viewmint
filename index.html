@@ -403,7 +403,7 @@ function checkCode(index) {
     input.nextElementSibling.style.display = "none";
 
     showSpinnerThen(() => {
-      status.textContent = "✅ ₹10 added to your balance!";
+      status.textContent = "💸₹10 has been added to your wallet.";
       document.getElementById("popupMessage").classList.remove("hidden");
     });
   } else {
@@ -432,7 +432,7 @@ function withdraw() {
   }
 
   if (method === "upi") {
-    const upiPattern = /^[\\w.-]+@[\\w.-]+$/;
+    const upiPattern = /^[\w.-]+@[\w.-]+$/;
     if (!upiPattern.test(upi)) {
       status.textContent = "❌ Invalid UPI ID";
       return;
@@ -447,7 +447,7 @@ function withdraw() {
       return;
     }
   } else if (method === "gplay") {
-    const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       status.textContent = "❌ Invalid Email Address";
       return;
